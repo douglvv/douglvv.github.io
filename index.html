@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Clique no botão</title>
+</head>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+        <div class="background-button">
+            <button class="button" onclick="fetchDog()">ME CLIQUE</button>
+        </div>
+    </div>
+
+    <div class="dot-spinner" 
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999;" 
+        id="loader"> 
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+    </div>
+
+    <div id="dogs" style="display: flex; flex-wrap: wrap;"></div>
+</body>
+
+
+</html>
+
+<script>
+    const dogs = document.getElementById("dogs")
+    const loader = document.getElementById("loader")
+    async function fetchDog() {
+        // Mostra o loader
+        loader.style.display = "block"
+        const response = await fetch('https://random.dog/woof.json')
+        const data = await response.json()
+
+        console.log(data.url)
+
+        // Verifica se a URL termina com uma extensão de imagem válida
+        let isImage = data.url.match(/\.(jpg|png|gif)$/i)
+
+        if (isImage) {
+            // Se for uma imagem, cria um elemento img e adiciona ao div
+            let newDog = document.createElement('img')
+            newDog.src = data.url
+            newDog.style = `width: 250px; height:250px`
+
+            dogs.append(newDog)
+        } else {
+            // Se não for uma imagem, chama a função fetchDog novamente
+            fetchDog()
+        }
+        // Esconde o loader
+        loader.style.display = "none"
+    }
+</script>
